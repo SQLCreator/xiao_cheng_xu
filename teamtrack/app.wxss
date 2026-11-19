@@ -1,0 +1,410 @@
+/* ===== 主题变量（日间 / 夜间） =====
+ * 夜间为默认值；页面根节点加 theme-light 即切换为日间。
+ * 注意：品牌色底上的文字仍使用字面 #FFFFFF，不随主题变化。
+ */
+page,
+.theme-dark {
+  --bg: #0F0F1A;
+  --card: #1A1A2E;
+  --card-2: #252540;
+  --card-3: #2D2D4D;
+  --border: rgba(255, 255, 255, 0.05);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --faint: rgba(255, 255, 255, 0.03);
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface-strong: rgba(255, 255, 255, 0.1);
+  --text: #FFFFFF;
+  --text-sub: #A0A0B0;
+  --text-dim: rgba(255, 255, 255, 0.4);
+  --brand: #FF6B35;
+  --brand-2: #FF8C5A;
+  --info: #1E90FF;
+  --success: #00D4AA;
+  --danger: #FF4757;
+  --warning: #FFD700;
+  --overlay: rgba(15, 15, 26, 0.95);
+  color: var(--text);
+}
+
+.theme-light {
+  --bg: #F5F6FA;
+  --card: #FFFFFF;
+  --card-2: #F1F2F7;
+  --card-3: #E7E9F2;
+  --border: rgba(26, 26, 46, 0.07);
+  --border-strong: rgba(26, 26, 46, 0.14);
+  --faint: rgba(26, 26, 46, 0.04);
+  --surface: rgba(26, 26, 46, 0.05);
+  --surface-strong: rgba(26, 26, 46, 0.09);
+  --text: #1A1A2E;
+  --text-sub: #6E6E85;
+  --text-dim: rgba(26, 26, 46, 0.4);
+  --brand: #FF6B35;
+  --brand-2: #FF8C5A;
+  --info: #1E90FF;
+  --success: #00A98A;
+  --danger: #E5484D;
+  --warning: #C98A00;
+  --overlay: rgba(245, 246, 250, 0.96);
+  color: var(--text);
+}
+
+/* 全局样式 */
+page {
+  /* 页面根节点跟随主题（实际内容区由 .page 撑满） */
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+view, text, scroll-view {
+  box-sizing: border-box;
+}
+
+/* 每个页面的根容器：撑满一屏并跟随主题背景 */
+.page {
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.2s ease;
+}
+
+/* 颜色变量通过class定义 */
+.bg-primary { background-color: var(--bg); }
+.bg-card { background-color: var(--card); }
+.bg-card-hover { background-color: var(--card-2); }
+
+.text-primary { color: var(--text); }
+.text-secondary { color: var(--text-sub); }
+.text-orange { color: var(--brand); }
+.text-blue { color: var(--info); }
+.text-green { color: var(--success); }
+.text-yellow { color: var(--warning); }
+.text-red { color: var(--danger); }
+
+/* 通用容器 */
+.container {
+  padding: 24rpx;
+}
+
+/* 卡片样式 */
+.card {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  border: 1rpx solid var(--border);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.card-hover {
+  background: var(--card-2);
+}
+
+.card:active {
+  transform: scale(0.98);
+  background: var(--card-2);
+}
+
+/* 按钮样式 */
+.btn-primary {
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  color: #FFFFFF;
+  border: none;
+  border-radius: 16rpx;
+  padding: 24rpx 48rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 4rpx 20rpx rgba(255, 107, 53, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-primary:active {
+  transform: scale(0.96);
+  box-shadow: 0 2rpx 10rpx rgba(255, 107, 53, 0.4);
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 2rpx solid var(--border-strong);
+  border-radius: 16rpx;
+  padding: 24rpx 48rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  text-align: center;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.btn-secondary:active {
+  transform: scale(0.96);
+  background: var(--surface);
+}
+
+.btn-secondary::after {
+  border: none;
+}
+
+/* 渐变文字 */
+.gradient-text {
+  background: linear-gradient(135deg, var(--brand), var(--info));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 标签样式 */
+.tag {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.tag-orange { background: rgba(255, 107, 53, 0.2); color: var(--brand); }
+.tag-blue { background: rgba(30, 144, 255, 0.2); color: var(--info); }
+.tag-green { background: rgba(0, 212, 170, 0.2); color: var(--success); }
+.tag-yellow { background: rgba(255, 215, 0, 0.2); color: var(--warning); }
+.tag-red { background: rgba(255, 71, 87, 0.2); color: var(--danger); }
+
+/* 分割线 */
+.divider {
+  height: 1rpx;
+  background: var(--surface);
+  margin: 24rpx 0;
+}
+
+/* 弹性布局 */
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-1 { flex: 1; }
+.gap-sm { gap: 12rpx; }
+.gap-md { gap: 24rpx; }
+.gap-lg { gap: 32rpx; }
+
+/* 文字大小 */
+.text-xs { font-size: 22rpx; }
+.text-sm { font-size: 26rpx; }
+.text-md { font-size: 30rpx; }
+.text-lg { font-size: 36rpx; }
+.text-xl { font-size: 44rpx; }
+.text-xxl { font-size: 56rpx; }
+
+.font-bold { font-weight: 700; }
+.font-medium { font-weight: 500; }
+
+/* 间距 */
+.mt-sm { margin-top: 12rpx; }
+.mt-md { margin-top: 24rpx; }
+.mt-lg { margin-top: 32rpx; }
+.mb-sm { margin-bottom: 12rpx; }
+.mb-md { margin-bottom: 24rpx; }
+.mb-lg { margin-bottom: 32rpx; }
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 0;
+}
+
+.empty-state .empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+  opacity: 0.5;
+}
+
+.empty-state .empty-text {
+  color: var(--text-sub);
+  font-size: 28rpx;
+}
+
+/* ===== 队伍切换条（多队伍管理） ===== */
+.team-switcher {
+  background: var(--card);
+  padding: 16rpx 24rpx;
+  border-bottom: 1rpx solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.team-switcher-scroll {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  display: flex;
+  gap: 16rpx;
+}
+
+.team-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 24rpx;
+  background: var(--card-2);
+  border-radius: 32rpx;
+  font-size: 26rpx;
+  color: var(--text-sub);
+  border: 1rpx solid transparent;
+  transition: all 0.2s;
+}
+
+.team-chip:active {
+  transform: scale(0.95);
+}
+
+.team-chip.active {
+  background: rgba(255, 107, 53, 0.15);
+  color: var(--brand);
+  border-color: rgba(255, 107, 53, 0.4);
+}
+
+.team-chip-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: var(--text-sub);
+}
+
+.team-chip.active .team-chip-dot {
+  background: var(--brand);
+}
+
+.team-chip-captain {
+  font-size: 20rpx;
+  padding: 2rpx 8rpx;
+  background: rgba(255, 215, 0, 0.2);
+  color: var(--warning);
+  border-radius: 8rpx;
+}
+
+.team-chip-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12rpx 20rpx;
+  background: transparent;
+  border: 1rpx dashed var(--border-strong);
+  border-radius: 32rpx;
+  font-size: 26rpx;
+  color: var(--text-sub);
+}
+
+/* 队伍管理入口（统一在管理页内创建/加入） */
+.team-chip-manage {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 12rpx 24rpx;
+  background: var(--faint);
+  border-radius: 32rpx;
+  font-size: 26rpx;
+  color: var(--text-sub);
+  transition: background 0.15s ease;
+}
+
+.team-chip-manage:active {
+  background: var(--surface-strong);
+  transform: scale(0.96);
+}
+
+.team-chip-manage-icon {
+  font-size: 30rpx;
+  line-height: 1;
+}
+
+.team-empty-hint {
+  padding: 24rpx;
+  text-align: center;
+  color: var(--text-sub);
+  font-size: 26rpx;
+}
+
+/* ===== 未登录提示（跨页面复用） ===== */
+.login-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 200rpx;
+}
+
+.login-avatar-placeholder {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80rpx;
+  margin-bottom: 32rpx;
+  border: 1rpx solid var(--border);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+.login-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12rpx;
+}
+
+.login-desc {
+  font-size: 28rpx;
+  margin-bottom: 48rpx;
+}
+
+.login-btn {
+  width: 60%;
+}
+
+/* ===== 通用动画 ===== */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.35s ease-out;
+}
+
+/* ===== 安全区 ===== */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}

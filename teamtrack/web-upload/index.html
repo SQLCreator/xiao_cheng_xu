@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>队迹 · 电脑端上传</title>
+<style>
+  :root {
+    --bg: #0F0F1A;
+    --card: #1A1A2E;
+    --card-2: #22223A;
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #F5F5FA;
+    --text-sub: #A0A0B0;
+    --text-dim: #6E6E85;
+    --brand: #FF6B35;
+    --brand-soft: rgba(255, 107, 53, 0.14);
+    --success: #2ED573;
+    --danger: #FF4757;
+    --warning: #FFB020;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(255, 107, 53, 0.14), transparent 42%),
+      radial-gradient(circle at 88% 8%, rgba(46, 213, 115, 0.08), transparent 38%),
+      var(--bg);
+  }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 20px 56px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #FF8A50, #FF6B35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 20px;
+    color: #fff;
+    box-shadow: 0 8px 22px rgba(255, 107, 53, 0.28);
+  }
+
+  .brand-name {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .brand-sub {
+    margin: 0 0 26px 52px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.7;
+    margin: 0 0 16px;
+  }
+
+  .banner {
+    display: none;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+    background: rgba(255, 176, 32, 0.1);
+    border: 1px solid rgba(255, 176, 32, 0.28);
+    color: #FFD27A;
+  }
+
+  .banner.show { display: block; }
+
+  .banner code {
+    color: #FFE3B0;
+    background: rgba(0, 0, 0, 0.22);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  .code-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .text-input {
+    flex: 1;
+    min-width: 0;
+    height: 48px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card-2);
+    color: var(--text);
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.18s ease;
+  }
+
+  .text-input::placeholder { color: var(--text-dim); }
+
+  .text-input:focus { border-color: rgba(255, 107, 53, 0.55); }
+
+  .code-input {
+    letter-spacing: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-family: "SF Mono", Consolas, monospace;
+  }
+
+  .btn {
+    height: 48px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.12s ease, opacity 0.18s ease, background 0.18s ease;
+    white-space: nowrap;
+  }
+
+  .btn:active { transform: scale(0.98); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #FF8A50, #FF6B35);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(255, 107, 53, 0.24);
+  }
+
+  .btn-primary:disabled,
+  .btn-secondary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .btn-secondary {
+    background: var(--card-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .task-info {
+    display: none;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--brand-soft);
+    border: 1px solid rgba(255, 107, 53, 0.24);
+    margin-top: 16px;
+  }
+
+  .task-info.show { display: flex; }
+
+  .task-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--brand);
+    margin-top: 7px;
+    flex: none;
+    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.16);
+  }
+
+  .task-title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.5;
+    word-break: break-all;
+  }
+
+  .task-meta {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 4px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    background: var(--card-2);
+    padding: 4px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+  }
+
+  .tab {
+    flex: 1;
+    height: 38px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--text-sub);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease;
+  }
+
+  .tab.active {
+    background: var(--card);
+    color: var(--text);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .dropzone {
+    border: 1.5px dashed rgba(255, 255, 255, 0.16);
+    border-radius: 14px;
+    padding: 34px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.18s ease, background 0.18s ease;
+  }
+
+  .dropzone:hover,
+  .dropzone.dragover {
+    border-color: rgba(255, 107, 53, 0.65);
+    background: rgba(255, 107, 53, 0.06);
+  }
+
+  .dropzone-title {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .dropzone-hint {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  .file-chip {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--card-2);
+    border: 1px solid var(--border);
+  }
+
+  .file-chip.show { display: flex; }
+
+  .file-ext {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: rgba(255, 107, 53, 0.14);
+    color: var(--brand);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    text-transform: uppercase;
+  }
+
+  .file-meta { flex: 1; min-width: 0; }
+
+  .file-name {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .file-size {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .file-clear {
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 6px;
+  }
+
+  .file-clear:hover { color: var(--danger); }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .actions .btn-primary { flex: 1; }
+
+  .progress {
+    display: none;
+    margin-top: 16px;
+  }
+
+  .progress.show { display: block; }
+
+  .progress-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+  }
+
+  .progress-inner {
+    height: 100%;
+    width: 0;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #FF8A50, #FF6B35);
+    transition: width 0.2s ease;
+  }
+
+  .progress-text {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 8px;
+  }
+
+  .msg {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+
+  .msg.show { display: block; }
+
+  .msg.error {
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid rgba(255, 71, 87, 0.28);
+    color: #FF98A2;
+  }
+
+  .msg.success {
+    background: rgba(46, 213, 115, 0.1);
+    border: 1px solid rgba(46, 213, 115, 0.28);
+    color: #8BEFA9;
+  }
+
+  .msg-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.9;
+    margin-top: 26px;
+  }
+
+  .footer b { color: var(--text-sub); font-weight: 500; }
+
+  @media (max-width: 520px) {
+    .wrap { padding: 26px 14px 40px; }
+    .card { padding: 18px; border-radius: 16px; }
+    .brand-sub { margin-left: 0; }
+    .code-row { flex-direction: column; }
+    .code-row .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="brand-mark">队</div>
+    <div class="brand-name">队迹 · 电脑端上传</div>
+  </div>
+  <p class="brand-sub">在电脑上直接提交交付物，不用先发到微信</p>
+
+  <div class="banner" id="setupBanner">
+    电脑端上传服务尚未配置。请先在
+    <code>index.html</code> 顶部的 <code>CONFIG.apiBase</code> 填入云开发「HTTP 访问服务」地址，
+    并把本页部署到「静态网站托管」。配置说明见文件内注释。
+  </div>
+
+  <div class="card">
+    <h2 class="card-title">输入上传码</h2>
+    <p class="card-desc">在小程序任务详情页点「电脑端上传」获取 6 位上传码，有效期 2 小时，仅可使用一次。</p>
+    <div class="code-row">
+      <input id="codeInput" class="text-input code-input" maxlength="6" autocomplete="off"
+        spellcheck="false" placeholder="例如 7KX9QM" />
+      <button id="verifyBtn" class="btn btn-primary">验证上传码</button>
+    </div>
+    <div class="task-info" id="taskInfo">
+      <span class="task-dot"></span>
+      <div>
+        <div class="task-title" id="taskTitle"></div>
+        <div class="task-meta" id="taskMeta"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="uploadCard" style="display:none;">
+    <div class="tabs">
+      <button class="tab active" data-tab="file">上传文件</button>
+      <button class="tab" data-tab="link">在线链接</button>
+    </div>
+
+    <div class="panel active" id="filePanel">
+      <div class="dropzone" id="dropzone">
+        <div class="dropzone-title">点击选择文件，或拖拽到这里</div>
+        <div class="dropzone-hint" id="dropzoneHint">
+          支持文档、图片、压缩包等，单文件不超过 3MB；更大的文件请改用在线链接
+        </div>
+      </div>
+      <input type="file" id="fileInput" style="display:none;" />
+      <div class="file-chip" id="fileChip">
+        <div class="file-ext" id="fileExt">DOC</div>
+        <div class="file-meta">
+          <div class="file-name" id="fileName"></div>
+          <div class="file-size" id="fileSize"></div>
+        </div>
+        <button class="file-clear" id="fileClear">移除</button>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="submitFileBtn" disabled>上传到任务</button>
+      </div>
+    </div>
+
+    <div class="panel" id="linkPanel">
+      <input id="linkInput" class="text-input" placeholder="粘贴在线文档链接，如 https://docs.qq.com/..." />
+      <div class="actions">
+        <button class="btn btn-primary" id="submitLinkBtn">提交链接</button>
+      </div>
+    </div>
+
+    <div class="progress" id="progress">
+      <div class="progress-bar"><div class="progress-inner" id="progressInner"></div></div>
+      <div class="progress-text" id="progressText">准备上传...</div>
+    </div>
+
+    <div class="msg" id="msg">
+      <div class="msg-title" id="msgTitle"></div>
+      <div id="msgBody"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <b>队迹协作工具</b><br />
+    上传记录会同步到任务交付物列表，并计入贡献统计
+  </div>
+</div>
+
+<script>
+  // ========================================================================
+  // 配置区：仅需改这里（也可用访问参数 ?api=... 临时覆盖，便于本地调试）
+  // apiBase 为云开发「HTTP 访问服务」绑定 webUpload 云函数后的完整地址
+  // 入口在腾讯云云开发平台控制台：https://tcb.cloud.tencent.com/dev#/env/http-access
+  // ========================================================================
+  var CONFIG = {
+    apiBase: 'https://cloud1-d8g501yg926149990.service.tcloudbase.com/webUpload'
+  };
+
+  var MAX_FILE_MB = 3;
+
+  var state = {
+    code: '',
+    info: null,
+    file: null,
+    busy: false,
+    done: false
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  var apiBase = (function () {
+    try {
+      var fromUrl = new URLSearchParams(window.location.search).get('api');
+      if (fromUrl) return String(fromUrl).replace(/\/+$/, '');
+    } catch (e) {}
+    return String(CONFIG.apiBase || '').replace(/\/+$/, '');
+  })();
+
+  function showBanner() {
+    if (!apiBase) {
+      $('setupBanner').classList.add('show');
+      $('verifyBtn').disabled = true;
+      $('codeInput').disabled = true;
+    }
+  }
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1024 / 1024).toFixed(2) + ' MB';
+  }
+
+  function extOf(name) {
+    var parts = String(name || '').split('.');
+    return parts.length > 1 ? parts.pop().slice(0, 4) : 'FILE';
+  }
+
+  function showMsg(type, title, body) {
+    var el = $('msg');
+    el.className = 'msg show ' + type;
+    $('msgTitle').textContent = title;
+    $('msgBody').textContent = body || '';
+  }
+
+  function hideMsg() {
+    $('msg').className = 'msg';
+  }
+
+  function setProgress(percent, text) {
+    $('progress').classList.add('show');
+    $('progressInner').style.width = Math.max(0, Math.min(100, percent)) + '%';
+    if (text) $('progressText').textContent = text;
+  }
+
+  function resetProgress() {
+    $('progress').classList.remove('show');
+    $('progressInner').style.width = '0';
+  }
+
+  function postJSON(payload, onProgress) {
+    return new Promise(function (resolve, reject) {
+      if (!apiBase) {
+        reject(new Error('电脑端上传服务尚未配置'));
+        return;
+      }
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', apiBase, true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.timeout = 120000;
+      if (xhr.upload && typeof onProgress === 'function') {
+        xhr.upload.onprogress = function (e) {
+          if (e.lengthComputable) onProgress(e.loaded / e.total);
+        };
+      }
+      xhr.onload = function () {
+        var data = null;
+        try { data = JSON.parse(xhr.responseText); } catch (e) {}
+        if (!data) {
+          reject(new Error('服务返回异常（HTTP ' + xhr.status + '）'));
+          return;
+        }
+        resolve(data);
+      };
+      xhr.onerror = function () {
+        reject(new Error('网络异常，请确认上传服务已开通且域名可访问'));
+      };
+      xhr.ontimeout = function () {
+        reject(new Error('上传超时，请重试或改用在线链接'));
+      };
+      xhr.send(JSON.stringify(payload));
+    });
+  }
+
+  // ---------- 上传码 ----------
+
+  function normalizeCode(value) {
+    return String(value || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+  }
+
+  function verifyCode(code) {
+    var normalized = normalizeCode(code);
+    if (normalized.length !== 6) {
+      showMsg('error', '上传码格式不正确', '请输入 6 位上传码，例如 7KX9QM');
+      return;
+    }
+    hideMsg();
+    state.busy = true;
+    $('verifyBtn').disabled = true;
+    $('verifyBtn').textContent = '验证中...';
+
+    postJSON({ action: 'info', code: normalized }).then(function (res) {
+      if (!res || res.code !== 0) {
+        throw new Error((res && res.message) || '上传码无效');
+      }
+      state.code = normalized;
+      state.info = res.data || {};
+      $('codeInput').value = normalized;
+      $('taskTitle').textContent = state.info.taskTitle || '未命名任务';
+      var expireText = state.info.expireAt
+        ? new Date(state.info.expireAt).toLocaleString('zh-CN', { hour12: false })
+        : '';
+      $('taskMeta').textContent = '上传码 ' + normalized +
+        (expireText ? ' · 有效期至 ' + expireText : '');
+      $('taskInfo').classList.add('show');
+      $('uploadCard').style.display = 'block';
+      var maxMB = state.info.maxFileMB || MAX_FILE_MB;
+      $('dropzoneHint').textContent = '支持文档、图片、压缩包等，单文件不超过 ' + maxMB +
+        'MB；更大的文件请改用在线链接';
+      $('uploadCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }).catch(function (err) {
+      showMsg('error', '无法验证上传码', err.message || '请稍后重试');
+      $('taskInfo').classList.remove('show');
+      $('uploadCard').style.display = 'none';
+    }).then(function () {
+      state.busy = false;
+      $('verifyBtn').disabled = false;
+      $('verifyBtn').textContent = '验证上传码';
+    });
+  }
+
+  // ---------- 文件选择 ----------
+
+  function pickFile(file) {
+    if (!file) return;
+    var maxMB = (state.info && state.info.maxFileMB) || MAX_FILE_MB;
+    if (file.size > maxMB * 1024 * 1024) {
+      showMsg('error', '文件超过大小限制',
+        '当前文件 ' + formatSize(file.size) + '，上限 ' + maxMB + 'MB。请改用在线文档链接上传。');
+      state.file = null;
+      $('fileChip').classList.remove('show');
+      $('submitFileBtn').disabled = true;
+      return;
+    }
+    hideMsg();
+    state.file = file;
+    $('fileExt').textContent = extOf(file.name);
+    $('fileName').textContent = file.name;
+    $('fileSize').textContent = formatSize(file.size);
+    $('fileChip').classList.add('show');
+    $('submitFileBtn').disabled = false;
+  }
+
+  function readAsDataURL(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(String(reader.result || '')); };
+      reader.onerror = function () { reject(new Error('读取文件失败，请重新选择')); };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ---------- 提交 ----------
+
+  function submitFile() {
+    if (state.busy || !state.file || state.done) return;
+    var file = state.file;
+
+    state.busy = true;
+    $('submitFileBtn').disabled = true;
+    $('submitFileBtn').textContent = '上传中...';
+    hideMsg();
+    setProgress(2, '正在读取文件...');
+
+    readAsDataURL(file).then(function (dataUrl) {
+      setProgress(10, '正在上传 ' + formatSize(file.size) + '...');
+      return postJSON({
+        action: 'submit',
+        code: state.code,
+        type: 'file',
+        fileName: file.name,
+        contentBase64: dataUrl
+      }, function (ratio) {
+        setProgress(10 + ratio * 88, '正在上传 ' + Math.round(ratio * 100) + '%');
+      });
+    }).then(function (res) {
+      if (!res || res.code !== 0) {
+        throw new Error((res && res.message) || '上传失败');
+      }
+      setProgress(100, '上传完成');
+      state.done = true;
+      $('submitFileBtn').textContent = '已提交';
+      showMsg('success', '提交成功',
+        '文件名：' + ((res.data && res.data.fileName) || file.name) +
+        '；版本 v' + ((res.data && res.data.version) || 1) +
+        '。负责人可在小程序中查看并验收。此上传码已失效，如需继续上传请在手机上重新生成。');
+      setTimeout(resetProgress, 900);
+    }).catch(function (err) {
+      resetProgress();
+      showMsg('error', '上传失败', err.message || '请稍后重试');
+      $('submitFileBtn').disabled = false;
+      $('submitFileBtn').textContent = '上传到任务';
+    }).then(function () {
+      state.busy = false;
+    });
+  }
+
+  function submitLink() {
+    if (state.busy || state.done) return;
+    var url = String($('linkInput').value || '').trim();
+    if (!/^https?:\/\//i.test(url)) {
+      showMsg('error', '链接格式不正确', '请填写以 http:// 或 https:// 开头的链接');
+      return;
+    }
+
+    state.busy = true;
+    $('submitLinkBtn').disabled = true;
+    $('submitLinkBtn').textContent = '提交中...';
+    hideMsg();
+
+    postJSON({
+      action: 'submit',
+      code: state.code,
+      type: 'link',
+      linkUrl: url
+    }).then(function (res) {
+      if (!res || res.code !== 0) {
+        throw new Error((res && res.message) || '提交失败');
+      }
+      state.done = true;
+      $('submitLinkBtn').textContent = '已提交';
+      showMsg('success', '提交成功',
+        '链接已记录为任务交付物（v' + ((res.data && res.data.version) || 1) +
+        '）。此上传码已失效，如需继续上传请在手机上重新生成。');
+    }).catch(function (err) {
+      showMsg('error', '提交失败', err.message || '请稍后重试');
+      $('submitLinkBtn').disabled = false;
+      $('submitLinkBtn').textContent = '提交链接';
+    }).then(function () {
+      state.busy = false;
+    });
+  }
+
+  // ---------- 事件绑定 ----------
+
+  $('codeInput').addEventListener('input', function (e) {
+    e.target.value = normalizeCode(e.target.value);
+  });
+
+  $('codeInput').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') verifyCode(e.target.value);
+  });
+
+  $('verifyBtn').addEventListener('click', function () {
+    verifyCode($('codeInput').value);
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (tab) {
+    tab.addEventListener('click', function () {
+      Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (t) {
+        t.classList.toggle('active', t === tab);
+      });
+      var name = tab.getAttribute('data-tab');
+      $('filePanel').classList.toggle('active', name === 'file');
+      $('linkPanel').classList.toggle('active', name === 'link');
+      hideMsg();
+    });
+  });
+
+  $('dropzone').addEventListener('click', function () { $('fileInput').click(); });
+  $('fileInput').addEventListener('change', function (e) {
+    pickFile(e.target.files && e.target.files[0]);
+  });
+
+  ['dragenter', 'dragover'].forEach(function (type) {
+    $('dropzone').addEventListener(type, function (e) {
+      e.preventDefault();
+      $('dropzone').classList.add('dragover');
+    });
+  });
+
+  ['dragleave', 'drop'].forEach(function (type) {
+    $('dropzone').addEventListener(type, function (e) {
+      e.preventDefault();
+      $('dropzone').classList.remove('dragover');
+    });
+  });
+
+  $('dropzone').addEventListener('drop', function (e) {
+    var files = e.dataTransfer && e.dataTransfer.files;
+    pickFile(files && files[0]);
+  });
+
+  $('fileClear').addEventListener('click', function () {
+    state.file = null;
+    $('fileInput').value = '';
+    $('fileChip').classList.remove('show');
+    $('submitFileBtn').disabled = true;
+    hideMsg();
+  });
+
+  $('submitFileBtn').addEventListener('click', submitFile);
+  $('submitLinkBtn').addEventListener('click', submitLink);
+
+  // ---------- 初始化 ----------
+
+  (function init() {
+    var fromUrl = '';
+    try {
+      fromUrl = new URLSearchParams(window.location.search).get('code') || '';
+    } catch (e) {}
+    showBanner();
+    if (fromUrl) {
+      $('codeInput').value = normalizeCode(fromUrl);
+      if (apiBase) verifyCode(fromUrl);
+    }
+  })();
+</script>
+</body>
+</html>

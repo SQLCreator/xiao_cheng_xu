@@ -1,0 +1,139 @@
+/**
+ * 云开发调用封装
+ */
+
+// 检测云开发是否可用
+function isCloudAvailable() {
+  try {
+    return typeof wx !== 'undefined' && !!wx.cloud
+  } catch (e) {
+    return false
+  }
+}
+
+// 检测并初始化云
+let _cloudReady = false
+function ensureCloud() {
+  if (_cloudReady) return true
+  try {
+    if (wx.cloud) {
+      // 标记为已就绪，实际可用性由调用结果决定
+      _cloudReady = true
+      return true
+    }
+  } catch (e) {
+    console.warn('[cloud] 云开发不可用，使用模拟数据')
+  }
+  return false
+}
+
+// 检查 app.js 是否已初始化云开发
+function checkCloudInited() {
+  try {
+    const app = getApp()
+    return app && app.globalData && app.globalData.cloudReady !== false
+  } catch (e) {
+    return true
+  }
+}
+
+/**
+ * 调用云函数
+ */
+function callFunction(name, data = {}) {
+  return new Promise((resolve, reject) => {
+    if (!ensureCloud()) {
+      return reject(new Error('CLOUD_UNAVAILABLE'))
+    }
+    wx.cloud.callFunction({
+      name,
+      data,
+      success: (res) => {
+        if (res.result && res.result.code === 0) {
+          resolve(res.result.data || res.result)
+        } else {
+          reject(new Error(res.result ? res.result.message : '云函数调用失败'))
+        }
+      },
+      fail: (err) => reject(err)
+    })
+  })
+}
+
+/**
+ * 上传文件到云存储
+ * @param {string} cloudPath 云存储路径
+ * @param {string} filePath 本地文件路径
+ */
+function uploadFile(cloudPath, filePath) {
+  return new Promise((resolve, reject) => {
+    if (!ensureCloud()) {
+      return reject(new Error('CLOUD_UNAVAILABLE'))
+    }
+    wx.cloud.uploadFile({
+      cloudPath,
+      filePath,
+      success: (res) => resolve(res.fileID),
+      fail: (err) => reject(err)
+    })
+  })
+}
+
+/**
+ * 删除云存储文件
+ */
+function deleteFile(fileID) {
+  return new Promise((resolve, reject) => {
+    if (!ensureCloud()) {
+      return reject(new Error('CLOUD_UNAVAILABLE'))
+    }
+    wx.cloud.deleteFile({
+      fileList: [fileID],
+      success: (res) => resolve(res),
+      fail: (err) => reject(err)
+    })
+  })
+}
+
+/**
+ * 获取临时下载链接
+ * 返回 { url, status, errMsg }，便于上层区分错误类型
+ */
+function getTempFileURL(fileID) {
+  return new Promise((resolve, reject) => {
+    if (!ensureCloud()) {
+      return reject(new Error('CLOUD_UNAVAILABLE'))
+    }
+    wx.cloud.getTempFileURL({
+      fileList: [fileID],
+      success: (res) => {
+        const item = res.fileList && res.fileList[0]
+        if (!item) {
+          return reject(new Error('文件不存在'))
+        }
+        // status: 0 成功, -1 失败
+        if (item.status === 0 && item.tempFileURL) {
+          resolve(item.tempFileURL)
+        } else {
+          // 常见 errMsg: "errno -1 errmsg -202703 open file starlink..."
+          // 通常因云存储权限设置为"仅创建者可读写"导致
+          const errMsg = item.errMsg || '获取链接失败'
+          const tip = errMsg.indexOf('-202') !== -1 || errMsg.indexOf('permission') !== -1
+            ? '文件权限不足，请检查云存储权限是否为"所有用户可读"'
+            : errMsg
+          reject(new Error(tip))
+        }
+      },
+      fail: (err) => reject(new Error(err.errMsg || '获取下载链接失败'))
+    })
+  })
+}
+
+module.exports = {
+  isCloudAvailable,
+  ensureCloud,
+  callFunction,
+  uploadFile,
+  deleteFile,
+  getTempFileURL
+}

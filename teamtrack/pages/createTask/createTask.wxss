@@ -1,0 +1,231 @@
+/* pages/createTask/createTask.wxss */
+.page {
+  min-height: 100vh;
+  padding: 24rpx;
+}
+
+.form-section {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  border: 1rpx solid var(--border);
+}
+
+.form-item {
+  margin-bottom: 32rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16rpx;
+}
+
+.form-input {
+  width: 100%;
+  background: var(--card-2);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  color: var(--text);
+  font-size: 28rpx;
+  border: 1rpx solid var(--border);
+}
+
+.form-textarea {
+  width: 100%;
+  height: 200rpx;
+  background: var(--card-2);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  color: var(--text);
+  font-size: 28rpx;
+  border: 1rpx solid var(--border);
+}
+
+.form-picker {
+  background: var(--card-2);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  color: var(--text);
+  font-size: 28rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1rpx solid var(--border);
+}
+
+.form-picker.placeholder {
+  color: var(--text-dim);
+}
+
+.placeholder {
+  color: var(--text-dim);
+}
+
+.form-hint {
+  display: block;
+  margin-top: 12rpx;
+  padding-left: 8rpx;
+}
+
+/* 需要验收开关行 */
+.review-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.text-xs { font-size: 22rpx; }
+.text-secondary { color: var(--text-sub); }
+
+.picker-arrow {
+  color: var(--text-sub);
+  font-size: 32rpx;
+}
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.category-item {
+  padding: 12rpx 28rpx;
+  background: var(--card-2);
+  border-radius: 32rpx;
+  font-size: 26rpx;
+  color: var(--text-sub);
+  border: 1rpx solid var(--border);
+}
+
+.category-item.active {
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  color: #FFFFFF;
+  border-color: transparent;
+}
+
+.points-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.points-item {
+  flex: 1;
+  min-width: 120rpx;
+  text-align: center;
+  padding: 16rpx;
+  background: var(--card-2);
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  color: var(--text-sub);
+  border: 1rpx solid var(--border);
+}
+
+.points-item.active {
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  color: #FFFFFF;
+  border-color: transparent;
+  font-weight: 600;
+}
+
+/* 任务附件 */
+.attachment-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 24rpx;
+  background: var(--card-2);
+  border-radius: 16rpx;
+  border: 1rpx dashed rgba(255, 107, 53, 0.4);
+  color: var(--brand);
+  font-size: 28rpx;
+  transition: background 0.15s ease;
+}
+
+.attachment-add-btn:active {
+  background: var(--card-3);
+}
+
+.attachment-add-icon {
+  font-size: 36rpx;
+  font-weight: 600;
+}
+
+.attachment-list {
+  margin-top: 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.attachment-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: var(--card-2);
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  border: 1rpx solid var(--border);
+}
+
+.attachment-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 12rpx;
+  background: rgba(255, 107, 53, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  flex-shrink: 0;
+}
+
+.attachment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  min-width: 0;
+}
+
+.attachment-name {
+  font-size: 28rpx;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-remove {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: var(--text-sub);
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.attachment-remove:active {
+  color: var(--danger);
+}
+
+.form-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 40rpx;
+  padding: 0 8rpx;
+}
+
+.form-actions button {
+  flex: 1;
+}

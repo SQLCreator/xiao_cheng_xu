@@ -1,0 +1,181 @@
+<!--pages/taskDetail/taskDetail.wxml-->
+<view class="page theme-{{theme}}" wx:if="{{task}}">
+  <!-- 任务头部 -->
+  <view class="detail-header">
+    <view class="detail-tags">
+      <view class="tag tag-blue">{{task.category}}</view>
+      <view class="tag {{task.statusClass}}">{{task.statusText}}</view>
+    </view>
+    <view class="detail-title">{{task.title}}</view>
+    <view class="detail-meta">
+      <text class="text-sm text-secondary">发布于 {{task.createdAt}}</text>
+      <text wx:if="{{task.points > 0}}" class="text-sm text-orange font-bold ml-md">{{task.points}}分</text>
+    </view>
+  </view>
+
+  <!-- 任务描述 -->
+  <view class="detail-section">
+    <view class="detail-section-title">任务描述</view>
+    <view class="detail-content">{{task.description}}</view>
+  </view>
+
+  <!-- 任务附件 -->
+  <view class="detail-section" wx:if="{{taskAttachments.length > 0}}">
+    <view class="detail-section-title">任务附件 ({{taskAttachments.length}})</view>
+    <view class="deliverable-list">
+      <view wx:for="{{taskAttachments}}" wx:key="index" class="deliverable-item" bindtap="onPreviewAttachment" data-item="{{item}}">
+        <view class="del-icon" style="background: {{item.iconColor}};">
+          <text>{{item.iconText}}</text>
+        </view>
+        <view class="del-info flex-1">
+          <text class="del-name">{{item.fileName}}</text>
+          <text class="text-xs text-secondary">{{item.size}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 截止时间 -->
+  <view class="detail-section">
+    <view class="detail-section-title">截止时间</view>
+    <view class="deadline-card {{countdown.urgent ? 'urgent' : ''}}">
+      <view class="deadline-info">
+        <text class="deadline-date">{{task.deadline}}</text>
+        <text class="deadline-countdown {{countdown.urgent ? 'text-red' : 'text-orange'}}">{{countdown.text}}</text>
+      </view>
+      <view class="deadline-icon">⏰</view>
+    </view>
+  </view>
+
+  <!-- 负责人（支持多人协作） -->
+  <view class="detail-section">
+    <view class="detail-section-head">
+      <text class="detail-section-title">负责人</text>
+      <text wx:if="{{isManager && task.status !== 'completed' && task.status !== 'reviewing'}}" class="assign-link" bindtap="onOpenAssign">
+        {{assignees.length > 0 ? '改派' : scene.assignLabel}}
+      </text>
+    </view>
+    <view wx:if="{{assignees.length > 0}}" class="assignee-list">
+      <view wx:for="{{assignees}}" wx:key="openid" class="assignee-card">
+        <view class="assignee-avatar-lg">{{item.nickName[0]}}</view>
+        <view class="flex-1">
+          <text class="assignee-name">{{item.nickName}}</text>
+          <text class="text-xs text-secondary">{{task.status === 'reviewing' ? '待验收' : (task.status === 'completed' ? '已完成' : '正在执行中')}}</text>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="no-assignee">
+      <text class="text-secondary">{{task.assignMode === 'assign' ? '暂未指派成员' : '暂无负责人'}}</text>
+      <view wx:if="{{task.assignMode !== 'assign' && task.status === 'pending'}}" class="claim-btn" bindtap="onClaim">立即{{scene.claimLabel}}</view>
+      <view wx:elif="{{isManager}}" class="claim-btn" bindtap="onOpenAssign">{{scene.assignLabel}}</view>
+    </view>
+  </view>
+
+  <!-- 交付物 -->
+  <view class="detail-section">
+    <view class="detail-section-title">交付物 ({{deliverables.length}})</view>
+    <view wx:if="{{deliverables.length > 0}}" class="deliverable-list">
+      <view wx:for="{{deliverables}}" wx:key="_id" class="deliverable-block">
+        <view class="deliverable-item" bindtap="onPreviewDeliverable" data-item="{{item}}">
+          <view class="del-icon" style="background: {{item.iconColor}};">
+            <text>{{item.iconText}}</text>
+          </view>
+          <view class="del-info flex-1">
+            <text class="del-name">{{item.fileName}}</text>
+            <text class="text-xs text-secondary">{{item.userName}} · v{{item.version}} · {{item.size}}</text>
+          </view>
+          <view class="tag {{item.reviewStatusClass}}">{{item.reviewStatusText}}</view>
+        </view>
+        <view wx:if="{{item.reviewComment}}" class="del-comment">{{scene.ownerLabel}}意见：{{item.reviewComment}}</view>
+        <view wx:if="{{isManager && item.reviewStatus !== 'approved'}}" class="del-review-actions">
+          <view class="del-review-btn reject" catchtap="onRejectDeliverable" data-id="{{item._id}}">驳回</view>
+          <view class="del-review-btn pass" catchtap="onApproveDeliverable" data-id="{{item._id}}">通过</view>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="empty-mini">暂无交付物</view>
+  </view>
+
+  <!-- 讨论 -->
+  <view class="detail-section">
+    <view class="detail-section-title">讨论 ({{comments.length}})</view>
+    <view wx:if="{{comments.length > 0}}" class="comment-list">
+      <view wx:for="{{comments}}" wx:key="_id" class="comment-item">
+        <view class="comment-head">
+          <text class="comment-user">{{item.userName}}</text>
+          <text class="comment-time">{{item.timeText}}</text>
+        </view>
+        <text class="comment-content">{{item.content}}</text>
+      </view>
+    </view>
+    <view wx:else class="empty-mini">还没有讨论，来说两句</view>
+    <view class="comment-input-row">
+      <input class="comment-input" placeholder="写下你的想法..." value="{{commentInput}}"
+        bindinput="onCommentInput" maxlength="500" confirm-type="send"
+        bindconfirm="onSubmitComment" />
+      <view class="comment-send {{commentInput ? 'active' : ''}}" bindtap="onSubmitComment">
+        {{sendingComment ? '...' : '发送'}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="detail-actions">
+    <block wx:if="{{task.status === 'pending' && task.assignMode !== 'assign'}}">
+      <button class="btn-primary" bindtap="onClaim">立即{{scene.claimLabel}}</button>
+    </block>
+    <block wx:if="{{task.status === 'pending' && task.assignMode === 'assign'}}">
+      <button wx:if="{{isManager}}" class="btn-primary" bindtap="onOpenAssign">{{scene.assignLabel}}</button>
+      <view wx:else class="waiting-badge">{{scene.unassignedLabel}}</view>
+    </block>
+    <block wx:if="{{task.status === 'in_progress'}}">
+      <button class="btn-secondary" bindtap="onUpload" loading="{{uploading}}">上传交付物</button>
+      <button class="btn-ghost" bindtap="onPcUpload">电脑端上传</button>
+      <button wx:if="{{canSubmit}}" class="btn-primary" bindtap="onSubmitReview">{{scene.submitReviewLabel}}</button>
+      <button wx:elif="{{isAssignee && !task.requireReview}}" class="btn-primary" bindtap="onComplete">标记完成</button>
+      <button wx:if="{{isManager}}" class="btn-ghost" bindtap="onOpenAssign">改派</button>
+      <view wx:if="{{task.reviewComment}}" class="review-comment">{{scene.ownerLabel}}意见：{{task.reviewComment}}</view>
+    </block>
+    <block wx:if="{{task.status === 'reviewing'}}">
+      <view class="review-tip">已提交验收，等待{{scene.ownerLabel}}处理</view>
+      <block wx:if="{{canReview}}">
+        <button class="btn-secondary" bindtap="onReviewReject">{{scene.rejectLabel}}</button>
+        <button class="btn-primary" bindtap="onReviewPass">{{scene.passLabel}}</button>
+      </block>
+    </block>
+    <block wx:if="{{task.status === 'completed'}}">
+      <view class="completed-badge">✓ 任务已完成</view>
+      <view wx:if="{{task.reviewComment}}" class="review-comment">验收意见：{{task.reviewComment}}</view>
+    </block>
+  </view>
+</view>
+
+<!-- 指派成员面板 -->
+<view wx:if="{{assignPanelVisible}}" class="assign-mask theme-{{theme}}" bindtap="onCloseAssign">
+  <view class="assign-panel" catchtap="noop">
+    <view class="assign-panel-header">
+      <text class="assign-panel-title">{{scene.assignLabel}}</text>
+      <text class="assign-panel-close" bindtap="onCloseAssign">×</text>
+    </view>
+    <scroll-view scroll-y class="assign-member-list">
+      <view wx:for="{{memberOptions}}" wx:key="openid"
+        class="assign-member {{item.checked ? 'checked' : ''}}"
+        bindtap="onToggleMember" data-openid="{{item.openid}}">
+        <view class="assign-check">{{item.checked ? '✓' : ''}}</view>
+        <view class="assign-avatar">{{item.nickName[0]}}</view>
+        <text class="flex-1">{{item.nickName}}</text>
+        <text class="text-xs text-secondary">{{item.roleLabel}}</text>
+      </view>
+      <view wx:if="{{memberOptions.length === 0}}" class="empty-mini">{{scene.teamLabel}}还没有成员</view>
+    </scroll-view>
+    <view class="assign-panel-footer">
+      <text class="text-xs text-secondary">已选 {{selectedOpenids.length}} 人</text>
+      <button class="btn-primary assign-confirm" bindtap="onConfirmAssign" loading="{{assigning}}">确定</button>
+    </view>
+  </view>
+</view>
+
+<!-- 加载中 -->
+<view wx:if="{{!task}}" class="page theme-{{theme}} loading">
+  <text class="text-secondary">加载中...</text>
+</view>

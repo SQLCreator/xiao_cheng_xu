@@ -1,0 +1,483 @@
+/* pages/taskDetail/taskDetail.wxss */
+.page {
+  min-height: 100vh;
+  padding: 24rpx;
+  padding-bottom: 160rpx;
+}
+
+.detail-header {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  border: 1rpx solid var(--border);
+}
+
+.detail-tags {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.detail-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 16rpx;
+}
+
+.detail-meta {
+  display: flex;
+  align-items: center;
+}
+
+.ml-md {
+  margin-left: 24rpx;
+}
+
+.detail-section {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  border: 1rpx solid var(--border);
+}
+
+.detail-section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-sub);
+  margin-bottom: 20rpx;
+}
+
+.detail-content {
+  font-size: 30rpx;
+  color: var(--text);
+  line-height: 1.8;
+}
+
+.deadline-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card-2);
+  border-radius: 16rpx;
+  padding: 28rpx;
+}
+
+.deadline-card.urgent {
+  background: rgba(255, 71, 87, 0.1);
+  border: 1rpx solid rgba(255, 71, 87, 0.3);
+}
+
+.deadline-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.deadline-date {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.deadline-countdown {
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.deadline-icon {
+  font-size: 48rpx;
+}
+
+.assignee-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: var(--card-2);
+  border-radius: 16rpx;
+  padding: 24rpx;
+}
+
+.assignee-avatar-lg {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand), var(--info));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.assignee-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.no-assignee {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20rpx;
+  padding: 32rpx 0;
+}
+
+.claim-btn {
+  padding: 20rpx 64rpx;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  border-radius: 16rpx;
+  color: #FFFFFF;
+  font-size: 30rpx;
+  font-weight: 600;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 53, 0.3);
+}
+
+.deliverable-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid var(--faint);
+}
+
+.deliverable-item:last-child {
+  border-bottom: none;
+}
+
+.del-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: bold;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.del-info {
+  overflow: hidden;
+}
+
+.del-name {
+  font-size: 28rpx;
+  color: var(--text);
+  display: block;
+  margin-bottom: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty-mini {
+  text-align: center;
+  padding: 32rpx 0;
+  color: var(--text-sub);
+  font-size: 26rpx;
+}
+
+.detail-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  padding: 24rpx;
+  background: var(--overlay);
+  backdrop-filter: blur(10px);
+  border-top: 1rpx solid var(--border);
+}
+
+.detail-actions button {
+  flex: 1;
+}
+
+/* 交付物逐份验收 */
+.deliverable-block {
+  margin-bottom: 16rpx;
+}
+
+.del-comment {
+  font-size: 22rpx;
+  color: var(--text-sub);
+  padding: 8rpx 16rpx 0;
+}
+
+.del-review-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16rpx;
+  padding: 12rpx 0 4rpx;
+}
+
+.del-review-btn {
+  padding: 8rpx 24rpx;
+  border-radius: 28rpx;
+  font-size: 24rpx;
+}
+
+.del-review-btn.reject {
+  background: rgba(255, 71, 87, 0.15);
+  color: var(--danger);
+}
+
+.del-review-btn.pass {
+  background: rgba(0, 212, 170, 0.15);
+  color: var(--success);
+}
+
+/* ===== P1：负责人 / 验收相关 ===== */
+.detail-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.detail-section-head .detail-section-title {
+  margin-bottom: 0;
+}
+
+.assign-link {
+  font-size: 26rpx;
+  color: var(--brand);
+}
+
+.assignee-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.waiting-badge {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx;
+  background: var(--card-2);
+  border-radius: 16rpx;
+  color: var(--text-sub);
+  font-size: 28rpx;
+}
+
+.review-tip {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx;
+  background: rgba(255, 107, 53, 0.12);
+  border-radius: 16rpx;
+  color: var(--brand-2);
+  font-size: 26rpx;
+}
+
+.review-comment {
+  flex-basis: 100%;
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
+.btn-ghost {
+  background: var(--card-2);
+  color: var(--text-sub);
+}
+
+/* 指派成员面板 */
+.assign-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+}
+
+.assign-panel {
+  width: 100%;
+  max-height: 70vh;
+  background: var(--card);
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 32rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.assign-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.assign-panel-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.assign-panel-close {
+  font-size: 40rpx;
+  color: var(--text-sub);
+  padding: 0 12rpx;
+}
+
+.assign-member-list {
+  max-height: 45vh;
+}
+
+.assign-member {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  margin-bottom: 12rpx;
+  background: var(--card-2);
+}
+
+.assign-member.checked {
+  border: 1rpx solid var(--brand);
+}
+
+.assign-check {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 8rpx;
+  border: 1rpx solid var(--text-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  color: var(--brand);
+}
+
+.assign-member.checked .assign-check {
+  background: rgba(255, 107, 53, 0.2);
+  border-color: var(--brand);
+}
+
+.assign-avatar {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand), var(--info));
+  color: #FFFFFF;
+  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assign-panel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  padding-top: 24rpx;
+}
+
+.assign-confirm {
+  flex: 0 0 200rpx;
+}
+
+/* 讨论 */
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.comment-item {
+  background: var(--faint);
+  border-radius: 16rpx;
+  padding: 20rpx;
+}
+
+.comment-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8rpx;
+}
+
+.comment-user {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--brand);
+}
+
+.comment-time {
+  font-size: 22rpx;
+  color: var(--text-sub);
+}
+
+.comment-content {
+  font-size: 28rpx;
+  color: var(--text);
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+.comment-input-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.comment-input {
+  flex: 1;
+  height: 72rpx;
+  padding: 0 24rpx;
+  border-radius: 36rpx;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 28rpx;
+}
+
+.comment-send {
+  flex: 0 0 120rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+  text-align: center;
+  border-radius: 36rpx;
+  background: var(--surface-strong);
+  color: var(--text-sub);
+  font-size: 28rpx;
+}
+
+.comment-send.active {
+  background: var(--brand);
+  color: #FFFFFF;
+}
+
+.completed-badge {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx;
+  background: rgba(0, 212, 170, 0.15);
+  border-radius: 16rpx;
+  color: var(--success);
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}

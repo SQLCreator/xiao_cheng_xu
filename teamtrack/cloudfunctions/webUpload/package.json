@@ -1,0 +1,9 @@
+{
+  "name": "webUpload",
+  "version": "1.0.0",
+  "description": "电脑端 H5 上传接口（HTTP 访问服务）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

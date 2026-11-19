@@ -1,0 +1,9 @@
+{
+  "name": "fixDeliverableTeamId",
+  "version": "1.0.0",
+  "description": "一次性修复交付物 teamId 为空的历史数据",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

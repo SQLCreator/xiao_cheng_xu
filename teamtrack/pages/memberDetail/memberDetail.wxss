@@ -1,0 +1,243 @@
+/* pages/memberDetail/memberDetail.wxss */
+.page {
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+.member-card {
+  padding: 24rpx;
+}
+
+.role-action {
+  margin-top: 16rpx;
+  text-align: center;
+  padding: 16rpx;
+  border-radius: 16rpx;
+  background: rgba(255, 107, 53, 0.12);
+  color: var(--brand-2);
+  font-size: 26rpx;
+}
+
+.member-header-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 20rpx;
+  border: 1rpx solid var(--border);
+}
+
+.member-avatar-lg {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand), var(--info));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.member-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.member-name-lg {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.member-score {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+
+.score-num {
+  font-size: 48rpx;
+  font-weight: 700;
+}
+
+.score-label {
+  margin-top: 4rpx;
+}
+
+.member-stats {
+  display: flex;
+  gap: 20rpx;
+}
+
+.stat-card-mini {
+  flex: 1;
+  background: var(--card);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  text-align: center;
+  border: 1rpx solid var(--border);
+}
+
+.stat-num {
+  font-size: 40rpx;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.stat-text {
+  font-size: 24rpx;
+}
+
+/* 区块 */
+.section {
+  padding: 0 24rpx;
+  margin-bottom: 32rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* 任务列表 */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: var(--card);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  border: 1rpx solid var(--border);
+  transition: background 0.15s ease;
+}
+
+.task-item:active {
+  background: var(--card-2);
+}
+
+.task-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  min-width: 0;
+}
+
+.task-title {
+  font-size: 28rpx;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.task-arrow {
+  font-size: 36rpx;
+  flex-shrink: 0;
+}
+
+/* 交付物列表 */
+.deliverable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.deliverable-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: var(--card);
+  border-radius: 20rpx;
+  padding: 20rpx 24rpx;
+  border: 1rpx solid var(--border);
+  transition: background 0.15s ease;
+}
+
+.deliverable-item:active {
+  background: var(--card-2);
+}
+
+.del-icon {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: bold;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.del-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  min-width: 0;
+}
+
+.del-name {
+  font-size: 28rpx;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.del-meta {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.del-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6rpx;
+  flex-shrink: 0;
+}
+
+.del-action {
+  font-size: 24rpx;
+}
+
+.empty-hint {
+  text-align: center;
+  padding: 60rpx 0;
+  font-size: 26rpx;
+}
+
+.bottom-space {
+  height: 40rpx;
+}

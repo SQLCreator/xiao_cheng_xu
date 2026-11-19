@@ -1,0 +1,39 @@
+<!--pages/createTeam/createTeam.wxml-->
+<view class="page theme-{{theme}}">
+  <view class="form-section">
+    <view class="form-item">
+      <text class="form-label">{{scene.teamLabel}}名称</text>
+      <input class="form-input" placeholder="{{scene.namePlaceholder}}" value="{{form.name}}" bindinput="onInput" data-field="name" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">{{scene.categoryLabel}}</text>
+      <picker mode="selector" range="{{templates}}" value="{{templateIndex}}" bindchange="onTemplateChange">
+        <view class="form-picker {{form.category ? '' : 'placeholder'}}">
+          {{form.category || scene.categoryPlaceholder}}
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">项目描述</text>
+      <textarea class="form-textarea" placeholder="{{scene.descPlaceholder}}" value="{{form.description}}" bindinput="onInput" data-field="description" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">截止日期</text>
+      <picker mode="date" value="{{form.deadline}}" start="{{today}}" bindchange="onDateChange">
+        <view class="form-picker {{form.deadline ? '' : 'placeholder'}}">
+          {{form.deadline || '请选择截止日期'}}
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="form-actions">
+    <button class="btn-secondary" bindtap="onCancel">取消</button>
+    <button class="btn-primary" bindtap="onSubmit" loading="{{submitting}}">{{scene.createLabel}}</button>
+  </view>
+</view>

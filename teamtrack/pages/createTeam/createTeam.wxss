@@ -1,0 +1,81 @@
+/* pages/createTeam/createTeam.wxss */
+.page {
+  min-height: 100vh;
+  padding: 24rpx;
+}
+
+.form-section {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  border: 1rpx solid var(--border);
+}
+
+.form-item {
+  margin-bottom: 32rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16rpx;
+}
+
+.form-input {
+  width: 100%;
+  background: var(--card-2);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  color: var(--text);
+  font-size: 28rpx;
+  border: 1rpx solid var(--border);
+}
+
+.form-textarea {
+  width: 100%;
+  height: 200rpx;
+  background: var(--card-2);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  color: var(--text);
+  font-size: 28rpx;
+  border: 1rpx solid var(--border);
+}
+
+.form-picker {
+  background: var(--card-2);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  color: var(--text);
+  font-size: 28rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1rpx solid var(--border);
+}
+
+.form-picker.placeholder {
+  color: var(--text-dim);
+}
+
+.picker-arrow {
+  color: var(--text-sub);
+  font-size: 32rpx;
+}
+
+.form-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 40rpx;
+  padding: 0 8rpx;
+}
+
+.form-actions button {
+  flex: 1;
+}

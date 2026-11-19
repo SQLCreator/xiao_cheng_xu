@@ -1,0 +1,241 @@
+// pages/teams/teams.js - 多队伍管理
+const DB = require('../../utils/db')
+const sceneUtil = require('../../utils/scene')
+const notify = require('../../utils/notify')
+const theme = require('../../utils/theme')
+
+Page({
+  data: {
+    theme: theme.get(),
+    scene: sceneUtil.getScene(),
+    teams: [],
+    currentTeamId: null,
+    loading: true
+  },
+
+  onLoad() {
+    this._loaded = false
+    this._force = false
+    // 预取订阅消息模板ID：加入队伍时才能同步拉起授权弹窗
+    notify.prefetch()
+    this.loadTeams()
+  },
+
+  onShow() {
+    theme.sync(this)
+    this.setData({ scene: sceneUtil.getScene() })
+    // 进入页面强制拉云端，确保跨设备创建/加入/退出队伍后能立即看到
+    if (this._loaded) {
+      this._force = true
+      this.loadTeams()
+    }
+  },
+
+  // 下拉刷新
+  async onPullDownRefresh() {
+    this._force = true
+    await this.loadTeams()
+    wx.stopPullDownRefresh()
+  },
+
+  async loadTeams() {
+    this.setData({ loading: true })
+    this._loaded = true
+    try {
+      const teams = await DB.getMyTeamsWithCache(this._force)
+      const currentTeamId = DB.getCurrentTeamId()
+
+      // 如果没设置当前队伍但有队伍数据，默认选第一个
+      let finalCurrent = currentTeamId
+      if (!finalCurrent && teams.length > 0) {
+        finalCurrent = teams[0]._id
+        DB.setCurrentTeamId(finalCurrent)
+      }
+
+      // 标记当前选中的队伍
+      const processed = teams.map(t => ({
+        ...t,
+        isCurrent: t._id === finalCurrent,
+        createdAtText: formatDate(t.createdAt)
+      }))
+
+      this.setData({
+        teams: processed,
+        currentTeamId: finalCurrent,
+        loading: false
+      })
+    } catch (err) {
+      console.error('加载队伍列表失败', err)
+      this.setData({ loading: false })
+    }
+  },
+
+  // 切换当前队伍
+  onSwitchTeam(e) {
+    const teamId = e.currentTarget.dataset.id
+    if (teamId === this.data.currentTeamId) return
+    DB.setCurrentTeamId(teamId)
+    // 仅更新 isCurrent 标记，无需重新请求列表
+    const teams = this.data.teams.map(t => ({
+      ...t,
+      isCurrent: t._id === teamId
+    }))
+    this.setData({ teams, currentTeamId: teamId })
+    wx.showToast({ title: `已切换${this.data.scene.teamLabel}`, icon: 'success', duration: 800 })
+  },
+
+  // 进入队伍详情
+  goTeamDetail(e) {
+    const teamId = e.currentTarget.dataset.id
+    DB.setCurrentTeamId(teamId)
+    wx.navigateTo({ url: '/pages/team/team' })
+  },
+
+  // 创建新队伍
+  goCreateTeam() {
+    wx.navigateTo({ url: '/pages/createTeam/createTeam' })
+  },
+
+  // 通过邀请码加入
+  onJoinByCode() {
+    // 顺带订阅「入队审批结果」提醒（模板未配置时静默跳过）
+    notify.request(['reviewResult']).finally(() => this.showJoinByCodeModal())
+  },
+
+  showJoinByCodeModal() {
+    wx.showModal({
+      title: `加入${this.data.scene.teamLabel}`,
+      editable: true,
+      placeholderText: '请输入6位邀请码',
+      confirmColor: '#FF6B35',
+      success: async (res) => {
+        if (res.confirm && res.content) {
+          const code = res.content.trim().toUpperCase()
+          if (code.length !== 6) {
+            wx.showToast({ title: '邀请码格式错误', icon: 'none' })
+            return
+          }
+          wx.showLoading({ title: '加入中...' })
+          try {
+            const result = await DB.joinTeam(code)
+            wx.hideLoading()
+            if (result && result.pending) {
+              wx.showModal({
+                title: '申请已提交',
+                content: `已向「${result.teamName || ''}」提交加入申请，等待${this.data.scene.ownerLabel}审批。`,
+                showCancel: false,
+                confirmColor: '#FF6B35'
+              })
+              return
+            }
+            wx.showToast({ title: '加入成功', icon: 'success' })
+            this.loadTeams()
+          } catch (err) {
+            wx.hideLoading()
+            wx.showToast({ title: err.message || '加入失败', icon: 'none' })
+          }
+        }
+      }
+    })
+  },
+
+  // 复制邀请码
+  onCopyInviteCode(e) {
+    const code = e.currentTarget.dataset.code
+    wx.setClipboardData({
+      data: code,
+      success: () => {
+        wx.showToast({ title: '邀请码已复制', icon: 'success' })
+      }
+    })
+  },
+
+  // 微信邀请好友（分享卡片，带当前点击的队伍邀请码）
+  onShareAppMessage(e) {
+    const data = (e && e.target && e.target.dataset) || {}
+    const teamName = data.name || this.data.scene.teamListTitle
+    const inviteCode = data.code || ''
+    let title = `邀请你加入"${teamName}"`
+    if (inviteCode) {
+      title += `（邀请码：${inviteCode}）`
+    }
+    return {
+      title,
+      path: `/pages/index/index?inviteCode=${inviteCode}`,
+      imageUrl: ''
+    }
+  },
+
+  // 队长：解散队伍
+  onDissolveTeam(e) {
+    const { id, name } = e.currentTarget.dataset
+    wx.showModal({
+      title: `解散${this.data.scene.teamLabel}`,
+      content: `确定要解散${this.data.scene.teamLabel}"${name}"吗？所有成员、任务和交付物将被永久删除，且无法恢复。`,
+      confirmText: '确认解散',
+      confirmColor: '#FF4757',
+      success: async (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '解散中...', mask: true })
+          try {
+            const result = await DB.quitTeam(id)
+            wx.hideLoading()
+            if (result && result.code === 0) {
+              // 如果解散的是当前队伍，清除当前队伍ID
+              if (id === this.data.currentTeamId) {
+                DB.setCurrentTeamId('')
+              }
+              wx.showToast({ title: `${this.data.scene.teamLabel}已解散`, icon: 'success' })
+              this.loadTeams()
+            } else {
+              wx.showToast({ title: (result && result.message) || '解散失败', icon: 'none' })
+            }
+          } catch (err) {
+            wx.hideLoading()
+            wx.showToast({ title: err.message || '解散失败', icon: 'none' })
+          }
+        }
+      }
+    })
+  },
+
+  // 队员：退出队伍
+  onQuitTeam(e) {
+    const { id, name } = e.currentTarget.dataset
+    wx.showModal({
+      title: `退出${this.data.scene.teamLabel}`,
+      content: `确定要退出${this.data.scene.teamLabel}"${name}"吗？退出后将无法查看该${this.data.scene.teamLabel}的任务和${this.data.scene.contributionLabel}。`,
+      confirmText: '确认退出',
+      confirmColor: '#FF6B35',
+      success: async (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '处理中...', mask: true })
+          try {
+            const result = await DB.quitTeam(id)
+            wx.hideLoading()
+            if (result && result.code === 0) {
+              // 如果退出的是当前队伍，清除当前队伍ID
+              if (id === this.data.currentTeamId) {
+                DB.setCurrentTeamId('')
+              }
+              wx.showToast({ title: `已退出${this.data.scene.teamLabel}`, icon: 'success' })
+              this.loadTeams()
+            } else {
+              wx.showToast({ title: (result && result.message) || '退出失败', icon: 'none' })
+            }
+          } catch (err) {
+            wx.hideLoading()
+            wx.showToast({ title: err.message || '退出失败', icon: 'none' })
+          }
+        }
+      }
+    })
+  }
+})
+
+function formatDate(d) {
+  if (!d) return ''
+  const date = new Date(d)
+  if (isNaN(date.getTime())) return ''
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+}

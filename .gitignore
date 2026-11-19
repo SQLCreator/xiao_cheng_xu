@@ -1,0 +1,14 @@
+node_modules/
+miniprogram_npm/
+
+*.log
+debug.log
+
+.DS_Store
+Thumbs.db
+
+.trae-html-share-packages/
+.vscode/
+.idea/
+
+project.private.config.json

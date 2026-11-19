@@ -1,0 +1,135 @@
+<!--pages/profile/profile.wxml-->
+<view class="page theme-{{theme}}">
+  <!-- 未登录状态 -->
+  <block wx:if="{{!isLoggedIn}}">
+    <!-- 登录入口（仅在未进入注册流程时显示） -->
+    <view class="login-prompt" wx:if="{{!registerStep}}">
+      <view class="login-avatar-placeholder">👤</view>
+      <text class="login-title">登录{{scene.productName}}</text>
+      <text class="login-desc text-secondary">首次登录请设置昵称</text>
+      <button class="btn-primary login-btn" bindtap="onLogin">微信登录</button>
+    </view>
+
+    <!-- 注册流程：设置昵称 -->
+    <view class="register-prompt" wx:if="{{registerStep === 'nickName'}}">
+      <view class="register-card">
+        <view class="register-icon">👋</view>
+        <text class="register-title">欢迎加入{{scene.productName}}</text>
+        <text class="register-desc text-secondary">请输入你在{{scene.teamLabel}}中的昵称，方便{{scene.memberLabel}}认出你</text>
+        <input class="register-input" placeholder="请输入昵称" value="{{tempNickName}}" bindinput="onNickNameInput" maxlength="20" focus="{{true}}" />
+        <button class="btn-primary login-btn" bindtap="onSubmitRegister">完成注册</button>
+      </view>
+    </view>
+  </block>
+
+  <!-- 已登录 -->
+  <block wx:else>
+    <!-- 个人信息卡片 -->
+    <view class="profile-header">
+      <view class="profile-avatar" bindtap="onEditNickName">{{user.nickName ? user.nickName[0] : '我'}}</view>
+      <view class="profile-name" bindtap="onEditNickName">{{user.nickName || '点击设置昵称'}}
+        <text class="edit-icon">✎</text>
+      </view>
+    </view>
+
+    <!-- 统计概览（所有队伍汇总，点击查看明细） -->
+    <view class="profile-stats" bindtap="goMyStats">
+      <view class="ps-item">
+        <text class="ps-num text-orange">{{user.contribution || 0}}</text>
+        <text class="ps-label text-xs text-secondary">累计{{scene.contributionLabel}}</text>
+      </view>
+      <view class="ps-divider"></view>
+      <view class="ps-item">
+        <text class="ps-num text-green">{{user.completedTasks || 0}}</text>
+        <text class="ps-label text-xs text-secondary">已完成</text>
+      </view>
+      <view class="ps-divider"></view>
+      <view class="ps-item">
+        <text class="ps-num text-blue">{{user.ongoingTasks || 0}}</text>
+        <text class="ps-label text-xs text-secondary">进行中</text>
+      </view>
+      <text class="ps-arrow text-secondary">›</text>
+    </view>
+
+    <!-- 我的任务 -->
+    <view class="menu-section">
+      <view class="menu-title">我的任务</view>
+      <view class="menu-item" bindtap="goMyTasks">
+        <view class="menu-icon" style="background: rgba(30, 144, 255, 0.15);">
+          <text style="color: #1E90FF;">📝</text>
+        </view>
+        <text class="menu-text flex-1">任务中心</text>
+        <text class="menu-arrow text-secondary">›</text>
+      </view>
+    </view>
+
+    <!-- 队伍管理 -->
+    <view class="menu-section">
+      <view class="menu-title">{{scene.teamLabel}}管理</view>
+      <view class="menu-item" bindtap="goTeams">
+        <view class="menu-icon" style="background: rgba(30, 144, 255, 0.15);">
+          <text style="color: #1E90FF;">☰</text>
+        </view>
+        <text class="menu-text flex-1">我的{{scene.teamLabel}}</text>
+        <text class="menu-arrow text-secondary">›</text>
+      </view>
+      <view class="menu-item" bindtap="goTeam">
+        <view class="menu-icon" style="background: rgba(255, 107, 53, 0.15);">
+          <text style="color: #FF6B35;">👥</text>
+        </view>
+        <text class="menu-text flex-1">当前{{scene.teamLabel}}详情</text>
+        <text class="menu-arrow text-secondary">›</text>
+      </view>
+    </view>
+
+    <!-- 其他设置 -->
+    <view class="menu-section">
+      <view class="menu-title">设置</view>
+      <view class="menu-item">
+        <view class="menu-icon" style="background: rgba(255, 107, 53, 0.15);">
+          <text style="color: #FF6B35;">◐</text>
+        </view>
+        <text class="menu-text flex-1">主题外观</text>
+        <view class="theme-switch">
+          <view class="theme-opt {{theme === 'light' ? 'active' : ''}}" data-mode="light" catchtap="onSwitchTheme">日间</view>
+          <view class="theme-opt {{theme === 'dark' ? 'active' : ''}}" data-mode="dark" catchtap="onSwitchTheme">夜间</view>
+        </view>
+      </view>
+      <view class="menu-item" bindtap="showAbout">
+        <view class="menu-icon" style="background: rgba(30, 144, 255, 0.15);">
+          <text style="color: #1E90FF;">ℹ</text>
+        </view>
+        <text class="menu-text flex-1">关于{{scene.productName}}</text>
+        <text class="menu-arrow text-secondary">›</text>
+      </view>
+      <view class="menu-item" bindtap="onEnableNotify">
+        <view class="menu-icon" style="background: rgba(255, 107, 53, 0.15);">
+          <text style="color: #FF6B35;">🔔</text>
+        </view>
+        <text class="menu-text flex-1">消息提醒</text>
+        <text class="text-xs text-secondary" style="margin-right: 8rpx;">{{notifyQuota > 0 ? '剩余 ' + notifyQuota + ' 条' : '未开启'}}</text>
+        <text class="menu-arrow text-secondary">›</text>
+      </view>
+      <view class="menu-item" bindtap="showHelp">
+        <view class="menu-icon" style="background: rgba(0, 212, 170, 0.15);">
+          <text style="color: #00D4AA;">?</text>
+        </view>
+        <text class="menu-text flex-1">使用帮助</text>
+        <text class="menu-arrow text-secondary">›</text>
+      </view>
+      <view class="menu-item" bindtap="onLogout">
+        <view class="menu-icon" style="background: rgba(255, 71, 87, 0.15);">
+          <text style="color: #FF4757;">⏻</text>
+        </view>
+        <text class="menu-text flex-1">退出登录</text>
+        <text class="menu-arrow text-secondary">›</text>
+      </view>
+    </view>
+
+    <!-- 产品信息 -->
+    <view class="product-info">
+      <text class="text-xs text-secondary">{{scene.productName}} v1.1.0</text>
+      <text class="text-xs text-secondary mt-sm">让团队协作更高效 · Powered by 微信云开发</text>
+    </view>
+  </block>
+</view>

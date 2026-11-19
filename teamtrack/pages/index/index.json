@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "skeleton": "/components/skeleton/skeleton"
+  },
+  "navigationBarTitleText": "队迹协作工具",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "light"
+}

@@ -1,0 +1,416 @@
+/* pages/team/team.wxss */
+.page {
+  min-height: 100vh;
+  padding: 24rpx;
+  padding-bottom: 40rpx;
+}
+
+.team-card {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+  border: 1rpx solid var(--border);
+}
+
+.team-header-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.team-badge-lg {
+  width: 96rpx;
+  height: 96rpx;
+  background: linear-gradient(135deg, var(--brand), var(--info));
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #FFFFFF;
+}
+
+.team-name-lg {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--text);
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.team-desc {
+  margin-bottom: 24rpx;
+  line-height: 1.6;
+}
+
+.team-meta {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 24rpx;
+  border-top: 1rpx solid var(--border);
+}
+
+.team-meta-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.meta-value {
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+/* 区块 */
+.section {
+  margin-bottom: 32rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.section-header .section-title {
+  margin-bottom: 0;
+}
+
+/* 时间线 */
+.timeline {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  border: 1rpx solid var(--border);
+}
+
+.timeline-item {
+  display: flex;
+  gap: 20rpx;
+  padding-bottom: 32rpx;
+  position: relative;
+}
+
+.timeline-item.clickable {
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-radius: 12rpx;
+  margin: -8rpx -12rpx;
+  padding: 8rpx 12rpx 32rpx;
+}
+
+.timeline-item.clickable:active {
+  background: var(--faint);
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 11rpx;
+  top: 28rpx;
+  bottom: 0;
+  width: 2rpx;
+  background: var(--surface-strong);
+}
+
+.timeline-item:last-child::before {
+  display: none;
+}
+
+.timeline-dot {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  background: var(--surface-strong);
+  flex-shrink: 0;
+  margin-top: 4rpx;
+  z-index: 1;
+}
+
+.timeline-item.done .timeline-dot {
+  background: var(--success);
+}
+
+.timeline-item.current .timeline-dot {
+  background: var(--brand);
+  box-shadow: 0 0 0 8rpx rgba(255, 107, 53, 0.2);
+}
+
+.timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.timeline-step {
+  font-size: 22rpx;
+}
+
+.timeline-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.timeline-date {
+  font-size: 24rpx;
+}
+
+/* 成员列表 */
+.invite-btn {
+  padding: 8rpx 24rpx;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  color: #FFFFFF;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 0;
+  border: none;
+}
+
+.invite-btn::after {
+  border: none;
+}
+
+/* 切换队伍按钮 */
+.switch-team-btn {
+  padding: 8rpx 20rpx;
+  background: rgba(30, 144, 255, 0.15);
+  color: var(--info);
+  border-radius: 16rpx;
+  font-size: 24rpx;
+}
+
+/* 无队伍空状态 */
+.empty-team {
+  padding: 80rpx 40rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32rpx;
+}
+
+.empty-team-btns {
+  display: flex;
+  gap: 20rpx;
+}
+
+.empty-btn {
+  padding: 20rpx 40rpx;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  background: var(--card);
+  color: var(--text);
+  border: 1rpx solid var(--border);
+}
+
+.empty-btn.primary {
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  border-color: transparent;
+  color: #FFFFFF;
+}
+
+.member-list {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 24rpx;
+  border: 1rpx solid var(--border);
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid var(--faint);
+}
+
+.member-item:last-child {
+  border-bottom: none;
+}
+
+.member-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--info), #4169E1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.member-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* ===== 报表导出 ===== */
+.export-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 28rpx;
+  background: var(--card);
+  border-radius: 24rpx;
+  border: 1rpx solid var(--border);
+}
+
+.export-title {
+  display: block;
+  font-size: 28rpx;
+  color: var(--text);
+  margin-bottom: 8rpx;
+}
+
+.export-arrow {
+  font-size: 36rpx;
+  color: var(--text-sub);
+}
+
+/* ===== 入队审批 ===== */
+.member-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.recalc-link {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  text-decoration: underline;
+}
+
+.join-mode-box {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.join-request {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid var(--faint);
+}
+
+.join-request:last-child {
+  border-bottom: none;
+}
+
+.req-btn {
+  padding: 10rpx 24rpx;
+  border-radius: 32rpx;
+  font-size: 24rpx;
+}
+
+.req-btn-reject {
+  background: rgba(255, 71, 87, 0.15);
+  color: var(--danger);
+}
+
+.req-btn-pass {
+  background: rgba(0, 212, 170, 0.15);
+  color: var(--success);
+}
+
+.empty-mini {
+  text-align: center;
+  padding: 24rpx 0;
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
+.align-center {
+  align-items: center;
+}
+
+.member-progress {
+  width: 120rpx;
+}
+
+.member-progress-bar {
+  height: 8rpx;
+  background: var(--surface);
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.member-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  border-radius: 4rpx;
+}
+
+/* 邀请码 */
+.invite-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.15), rgba(30, 144, 255, 0.15));
+  border-radius: 24rpx;
+  padding: 32rpx;
+  border: 1rpx solid var(--border);
+}
+
+.invite-title {
+  font-size: 28rpx;
+  color: var(--text-sub);
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.invite-code {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--brand);
+  letter-spacing: 4rpx;
+}
+
+.invite-action {
+  padding: 16rpx 32rpx;
+  background: var(--text);
+  border-radius: 16rpx;
+  color: var(--bg);
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.bottom-space {
+  height: 40rpx;
+}
+
+.join-team-btn {
+  margin-top: 20rpx;
+  text-align: center;
+  padding: 24rpx;
+  background: rgba(30, 144, 255, 0.1);
+  border-radius: 16rpx;
+  color: var(--info);
+  font-size: 28rpx;
+  border: 1rpx dashed rgba(30, 144, 255, 0.3);
+}
